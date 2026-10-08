@@ -35,7 +35,6 @@ The distinction that matters: a reporting tool tells you what happened. A PM ass
 | Stakeholder | Interest | Influence | Engagement |
 |---|---|---|---|
 | Margarita (Owner/PM) | Full ownership, learning outcome | Full | Daily |
-| THRIVE faculty/evaluators | Assessment against program rubric | Assignment-scoped | Per deliverable |
 | Future open-source contributors | Potential collaborators, code quality | TBD — none yet | Via repo, once public |
 | End users (compliance teams, hypothetical) | Eventual adopters of the setup agent | Shapes setup agent design | Via setup agent feedback loop, once built |
 
