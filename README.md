@@ -103,7 +103,6 @@ Start at the [Documentation Index](docs/README.md).
 
 Primary documents:
 
-- [Concept Overview](docs/concept/overview.md)
 - [UCI Reference Run](docs/reference-run/uci-german-credit.md)
 - [Annex IV sample](docs/compliance-samples/annex-iv.md)
 - [Instructions for Use sample](docs/compliance-samples/instructions-for-use.md)
