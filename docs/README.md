@@ -2,14 +2,6 @@
 
 This directory is the single entry point for human-readable project documentation.
 
-## Start here
-
-| Question | Document |
-|---|---|
-| What is this project? | [Concept overview](concept/overview.md) |
-| What is implemented and what is target architecture? | [Architecture and evidence boundaries](concept/architecture.md) |
-| How is the real UCI run reproduced? | [UCI German Credit reference run](reference-run/uci-german-credit.md) |
-
 ## Compliance-document samples
 
 - [Annex IV Technical Documentation](compliance-samples/annex-iv.md)
