@@ -39,8 +39,6 @@ Shown as target architecture, but not implemented end to end:
 - PostgreSQL, n8n and Jira integrations;
 - continuous monitoring, retention enforcement and operational oversight controls.
 
-See [Architecture and Evidence Boundaries](docs/concept/architecture.md) for the complete contract.
-
 ## Run the demo
 
 Prerequisites: Node.js and npm.
@@ -59,8 +57,6 @@ npm run check
 ```
 
 Netlify deployment is defined by the root [`netlify.toml`](netlify.toml). The site builds from `demo/` with Node.js 22 and publishes `demo/dist`.
-
-The recommended presentation sequence is documented in the [Demo Guide](docs/concept/demo-guide.md).
 
 ## Reproduce the UCI reference run
 
@@ -108,8 +104,6 @@ Start at the [Documentation Index](docs/README.md).
 Primary documents:
 
 - [Concept Overview](docs/concept/overview.md)
-- [Architecture and Evidence Boundaries](docs/concept/architecture.md)
-- [Demo Guide](docs/concept/demo-guide.md)
 - [UCI Reference Run](docs/reference-run/uci-german-credit.md)
 - [Annex IV sample](docs/compliance-samples/annex-iv.md)
 - [Instructions for Use sample](docs/compliance-samples/instructions-for-use.md)
