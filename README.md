@@ -1,53 +1,69 @@
 # Fair AI Observatory
 
-**Demo**: https://fair-ai-observatory.netlify.app
+**Open-source EU AI Act compliance and bias-detection pipeline for high-risk ML systems.**
+Reference case: consumer credit scoring on the UCI Statlog German Credit dataset.
 
-**Interactive concept prototype for an EU AI Act-oriented fairness and robustness workflow.**
+**Live demo:** https://fair-ai-observatory.netlify.app · [What the demo shows](docs/demo.md)
 
-The reference use case is consumer credit scoring. The project demonstrates how dataset configuration, deterministic evaluation, human review, audit history, and compliance-document samples could fit into one product experience.
+> Concept prototype – not a production compliance platform, conformity assessment or legal advice.
 
-> This repository is a concept prototype, not a production compliance platform, conformity assessment, or source of legal advice.
+## Concept
 
-## What the demo contains
+The Observatory combines a deterministic data/ML pipeline with an AI-agent layer that assists development, project management and decision pressure-testing – and, as a product feature, helps new users configure the pipeline for their own datasets.
 
-| View | Purpose | Evidence type |
+- **Implemented:** a six-stage Python reference pipeline – ingestion, XGBoost baseline, disparate impact, counterfactual fairness (equalized odds), intersectional bias and Fairlearn mitigation – plus an Article 15 robustness battery and generated Annex IV / Instructions for Use documents.
+- **Target architecture:** orchestration with Airflow, data quality with Great Expectations and dbt, PostgreSQL storage, the conversational setup agent, and n8n/Jira integrations.
+- **Next:** HMDA dataset support (v1.1).
+
+## Governance model
+
+**Human owner:** Margarita Sergeeva – sole decision-maker on anything that becomes part of the audit trail. Agents propose; the owner approves. This is non-negotiable for any output that functions as compliance evidence.
+
+| Agent | Role | Decision authority |
 |---|---|---|
-| Act 1 — Product Demo | Setup flow, simulated pipeline, fairness mitigation and dashboard | Scripted synthetic scenario |
-| Act 2 — Process View | Milestones, agent roles, decision log and stakeholder panel | Scripted governance scenario |
-| Pipeline Schema | Intended end-to-end architecture | Target architecture |
-| UCI Reference Run | Six-stage fairness pipeline and robustness results on public UCI data | Reproducible Python-generated artifact |
+| Developer | Implements, tests, flags PRs for review | None – never merges |
+| PM Assistant | Tracks status, logs decisions, guides phase gates | None – surfaces, doesn't decide |
+| Stakeholder Panel | Pressure-tests methodology decisions before commit | None – argues, doesn't decide |
+| Setup Agent *(product feature)* | Helps end users configure their own pipeline | Proposes configuration; user approves |
 
-The synthetic and real-data layers are intentionally separate. Act 1 retains its scripted product story. The UCI view renders the actual six-stage run: gender checks pass, foreign-worker proxy and equalized-odds checks expose findings, mitigation is attempted but remains incomplete, and boundary sensitivity fails.
+## PM assistant mandate
 
-## Current implementation
+A reporting tool tells you what happened. A PM assistant with this mandate also tells you what's *missing* before it becomes a problem – closer to a process coach than a dashboard. It:
 
-Implemented:
+- **Gatekeeps phase transitions** – checks that required artifacts exist before work moves on: a decision-log entry for every metric or threshold choice, a stakeholder-panel run for decisions with real trade-offs, and a scoped issue.
+- **Grounds advice in a framework** – draws on the THRIVE AI-Augmented Project Management frameworks rather than generic advice.
+- **Flags missing artifacts** – e.g. a module in progress without a risk note, or a decision made in conversation but never logged.
+- **Reports and logs** – status reporting and decision logging.
 
-- responsive React/Vite concept demo;
-- standalone Article 15 robustness battery;
-- official UCI German Credit downloader with checksum and shape validation;
-- deterministic XGBoost reference audit;
-- reusable ingestion, baseline-model, disparate-impact, equalized-odds, intersectional-bias and Fairlearn-mitigation modules;
-- machine-readable real-data result artifact;
-- restored and regenerated DOCX compliance deliverables plus Markdown reading copies.
+## Project phases
 
-Shown as target architecture, but not implemented end to end:
+| Phase | Status | Gate check |
+|---|---|---|
+| Initiation | Complete | Charter and stakeholder register exist |
+| Planning | Complete for v1 (six-module scope, dataset choice) | Decision log covers scope calls (e.g. HMDA deferral) |
+| Execution | In progress – six modules done, agent layer in progress | Each module has a logged decision trail |
+| Monitoring & Control | In progress | Status digest and blocker tracking |
+| Closure (v1 / v1.1) | Planned | HMDA support, setup agent, documentation complete |
 
-- general dataset upload beyond the UCI reference contract;
-- conversational setup agent;
-- Great Expectations, dbt and Airflow pipeline;
-- PostgreSQL, n8n and Jira integrations;
-- continuous monitoring, retention enforcement and operational oversight controls.
+## Tooling map
 
+```text
+Issue tracker (human-facing record)
+   ⇅  sync workflows (target: n8n + Jira)
+decisions.log / module_status.yaml (agent-facing state)
+   ⇅
+agent skills  →  developer | PM assistant | stakeholder panel
+   ⇅
+GitHub repo  →  Python reference pipeline (target: Airflow → Great Expectations → dbt → XGBoost/Fairlearn)
+```
 
-Primary documents:
+## Documentation
 
-- [UCI Reference Run](docs/reference-run/uci-german-credit.md)
-- [Annex IV sample](docs/compliance-samples/annex-iv.md)
-- [Instructions for Use sample](docs/compliance-samples/instructions-for-use.md)
-- [Annex IV DOCX](docs/Annex_IV_Technical_Documentation.docx)
-- [Instructions for Use DOCX](docs/Instructions_for_Use.docx)
+- [Demo description](docs/demo.md)
 - [Project Charter](docs/project-management/project-charter.md)
+- [UCI Reference Run](docs/reference-run/uci-german-credit.md)
+- [Annex IV sample](docs/compliance-samples/annex-iv.md) · [DOCX](docs/Annex_IV_Technical_Documentation.docx)
+- [Instructions for Use sample](docs/compliance-samples/instructions-for-use.md) · [DOCX](docs/Instructions_for_Use.docx)
 
 `decisions.log` and `module_status.yaml` are sample governance artifacts used by the process concept.
 
@@ -64,7 +80,7 @@ fair-ai-observatory/
 │   └── ReferenceRun.jsx
 ├── docs/
 │   ├── README.md
-│   ├── concept/
+│   ├── demo.md
 │   ├── compliance-samples/
 │   ├── project-management/
 │   └── reference-run/
@@ -83,14 +99,6 @@ fair-ai-observatory/
 ├── module_status.yaml
 └── requirements.txt
 ```
-
-## Methodology boundaries
-
-- The `0.80` disparate-impact and `0.10` parity-gap thresholds are documented diagnostic choices, not EU AI Act bright lines.
-- Synthetic Act 1 values must not be presented as UCI reference results.
-- Passing selected fairness thresholds does not establish general fairness.
-- The current robustness implementation is a technical spike, not production validation infrastructure.
-- Humans retain authority over methodology, deployment, remediation and regulatory interpretation.
 
 ## Contributing
 

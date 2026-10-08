@@ -14,6 +14,7 @@ The DOCX files are the formal sample deliverables and contain the real UCI refer
 ## Project-management material
 
 - [Project charter](project-management/project-charter.md)
+- [Demo description](demo.md)
 
 ## Files outside this directory
 
