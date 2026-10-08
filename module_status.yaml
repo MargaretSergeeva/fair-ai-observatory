@@ -1,0 +1,113 @@
+# module_status.yaml — Fair AI Observatory
+# Updated by: pipeline runs, developer_agent (flags PRs), pm_assistant (weekly digest)
+# States: not_started | in_progress | blocked | done
+# Synced to Jira board via n8n workflow
+
+pipeline:
+  ingestion:
+    status: done
+    last_updated: 2026-07-14
+    notes: Official UCI raw contract validated; compound field decomposed; protected fields excluded before one-hot encoding
+
+  xgboost_baseline:
+    status: done
+    last_updated: 2026-07-14
+    notes: Fairness-through-unawareness baseline; real UCI test accuracy 73.67%
+
+  disparate_impact:
+    status: done
+    last_updated: 2026-07-14
+    notes: Gender DIR 0.9977 PASS; foreign_worker proxy DIR 0.7944 and SPD 0.2056 FAIL
+
+  counterfactual_fairness:
+    status: done
+    last_updated: 2026-07-14
+    notes: Real UCI equalized odds battery; age_group and foreign_worker proxy checks fail diagnostic threshold
+
+  intersectional_bias:
+    status: done
+    last_updated: 2026-07-14
+    notes: Real UCI two- and three-way checks with min-n=30; excluded cells retained with reasons
+
+  fairlearn_mitigation:
+    status: done
+    last_updated: 2026-07-14
+    notes: ThresholdOptimizer targeted foreign_worker proxy; DIR improved 0.7944 → 0.8342 but SPD 0.1530 remains FAIL; accuracy 73.67% → 72.33%
+
+  robustness_battery:
+    status: in_progress
+    last_updated: 2026-07-14
+    notes: Distribution shift PASS, input validation 4/4 PASS, OOD 3.67% INFO, boundary sensitivity 22.22% FAIL
+
+setup_agent:
+  status: done
+  last_updated: 2026-06-21
+  notes: Conversational config flow — schema → risk tier → metrics → config → human review
+
+documentation:
+  annex_iv:
+    status: done
+    last_updated: 2026-07-14
+    notes: DOCX restored and regenerated with real UCI six-stage results; Markdown synthetic reading copy retained separately
+
+  instructions_for_use:
+    status: done
+    last_updated: 2026-07-14
+    notes: DOCX restored and regenerated with real UCI performance and unresolved mitigation result
+
+  decisions_log:
+    status: in_progress
+    last_updated: 2026-06-21
+    notes: 8 entries from Run #1; automated retention policy not yet set
+
+demo:
+  act1_product:
+    status: done
+    last_updated: 2026-06-21
+    notes: Setup agent → pipeline → dashboard (data quality + fairness + performance + robustness)
+
+  act2_process:
+    status: done
+    last_updated: 2026-06-21
+    notes: Milestones · agent team · decision log · stakeholder panel (live open finding)
+
+  schema_diagram:
+    status: done
+    last_updated: 2026-06-21
+    notes: Full pipeline architecture diagram
+
+  uci_reference_run:
+    status: done
+    last_updated: 2026-07-14
+    notes: Reproducible official UCI six-stage pipeline artifact shown separately from the synthetic scenario
+
+agent_team:
+  observatory_developer:
+    status: done
+    last_updated: 2026-06-21
+
+  observatory_pm:
+    status: done
+    last_updated: 2026-06-21
+    notes: Jira sync designed; n8n workflow to be wired
+
+  observatory_stakeholders:
+    status: done
+    last_updated: 2026-06-21
+
+roadmap_v1_1:
+  hmda_support:
+    status: not_started
+
+  boundary_sensitivity_fix:
+    status: blocked
+    notes: Open Article 15 finding; model review required before fix
+
+  art9_continuous_monitoring:
+    status: not_started
+
+  art14_override_infrastructure:
+    status: not_started
+
+  art12_log_retention:
+    status: not_started

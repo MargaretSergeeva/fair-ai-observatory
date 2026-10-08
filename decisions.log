@@ -1,0 +1,54 @@
+# decisions.log — Fair AI Observatory
+# Append-only. One entry per judgment call.
+# Format: date | decision | rationale | deferred | source
+# Written by: setup_agent, pipeline, pm_assistant, robustness_module, developer_agent, margarita
+
+# ── Run #1 · 21 June 2026 ──────────────────────────────────────
+
+date: 2026-06-21T14:02
+decision: Detected compound field personal_status_and_sex; decomposed into gender + marital_status
+rationale: Value set contains combined gender/marital tokens (e.g. "male single", "female divorced") — single-column detection would miss the marital_status dimension entirely
+deferred: null
+source: setup_agent
+
+date: 2026-06-21T14:03
+decision: Classified as EU AI Act Annex III high-risk (credit scoring)
+rationale: System makes individual creditworthiness determinations affecting access to financial services — maps directly to Annex III §5(b)
+deferred: null
+source: setup_agent
+
+date: 2026-06-21T14:04
+decision: Disparate impact threshold set to 0.80; statistical parity threshold set to 0.10
+rationale: Standard diagnostic defaults used in fairness literature; documented as methodology choices, NOT legal requirements — the EU AI Act requires "appropriate measures" and does not specify numeric cutoffs. Flagged for DPO sign-off.
+deferred: null
+source: setup_agent
+
+date: 2026-06-21T14:05
+decision: Female · 18–25 intersectional cell excluded from analysis (n=24 < 30)
+rationale: Insufficient sample size — reporting a statistic from n=24 would produce noise, not signal. Documented as excluded rather than silently omitted.
+deferred: Review if dataset is expanded with additional records in v1.1
+source: pipeline
+
+date: 2026-06-21T14:11
+decision: Fairlearn ThresholdOptimizer mitigation applied
+rationale: Disparate impact 0.70 below 0.80 threshold; statistical parity difference 0.24 above 0.10 threshold. Triggered by any_metric_violation rule.
+deferred: null
+source: pipeline
+
+date: 2026-06-21T14:12
+decision: Post-mitigation result (disparate impact 0.97) flagged for DPO review before production use
+rationale: Pipeline auto-mitigation succeeds but human sign-off required per Article 14 before configuration is used in production. Accuracy cost: 78% → 75% — disclosed, not hidden.
+deferred: null
+source: pm_assistant
+
+date: 2026-06-21T14:18
+decision: Decision boundary sensitivity 27.6% flip rate flagged as open finding — NOT resolved
+rationale: Exceeds 10% diagnostic threshold. 27.6% of borderline applicants receive a different decision under ±5% input perturbation. Distinct from fairness findings — concerns decision stability, not disparate treatment. Blocked from production until resolved.
+deferred: Resolution tracked as v1.1 roadmap item
+source: robustness_module
+
+date: 2026-06-21T14:20
+decision: HMDA dataset support deferred to v1.1
+rationale: Out of scope for v1.0 given solo build. German Credit dataset sufficient as reference case for compliance methodology demonstration.
+deferred: v1.1
+source: margarita

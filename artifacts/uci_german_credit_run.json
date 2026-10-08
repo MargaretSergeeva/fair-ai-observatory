@@ -1,0 +1,850 @@
+{
+  "artifact_version": 2,
+  "provenance": {
+    "dataset": "Statlog (German Credit Data)",
+    "source": "https://archive.ics.uci.edu/dataset/144/statloggermancreditdata",
+    "doi": "10.24432/C5NC77",
+    "license": "CC BY 4.0",
+    "dataset_sha256": "b21f3d81db8071257d5ff1deaeba1fd4303b62712e6fcc9715c7a86202cb5871",
+    "execution": "deterministic local six-stage fairness pipeline"
+  },
+  "runtime": {
+    "python": "3.13.7",
+    "numpy": "2.5.1",
+    "pandas": "2.3.3",
+    "scikit_learn": "1.9.0",
+    "xgboost": "3.3.0",
+    "fairlearn": "0.14.0"
+  },
+  "methodology": {
+    "train_test_split": "70/30 stratified, random_state=42",
+    "target": "credit_risk == 1 interpreted as good credit",
+    "model": {
+      "model_type": "XGBoost gradient-boosted decision tree",
+      "config": {
+        "n_estimators": 100,
+        "max_depth": 4,
+        "learning_rate": 0.05,
+        "random_state": 42,
+        "eval_metric": "logloss"
+      },
+      "fairness_baseline": "protected attributes excluded from model features",
+      "limitations": [
+        "Excluding protected attributes does not prevent proxy discrimination.",
+        "Exploratory benchmark; not a production credit model.",
+        "The official asymmetric cost matrix is not applied."
+      ]
+    },
+    "limitations": [
+      "Exploratory reference baseline; no hyperparameter tuning.",
+      "Diagnostic thresholds are methodology choices, not legal bright lines.",
+      "The foreign_worker A202 test group has n=13; its disparity and mitigation results are unstable and require more data.",
+      "The result is not a conformity assessment or legal opinion."
+    ]
+  },
+  "dataset": {
+    "rows": 1000,
+    "train_rows": 700,
+    "test_rows": 300,
+    "encoded_features": 54,
+    "protected_columns_excluded": [
+      "age",
+      "foreign_worker",
+      "gender",
+      "marital_status",
+      "personal_status_sex"
+    ],
+    "gender_counts": {
+      "male": 690,
+      "female": 310
+    }
+  },
+  "baseline": {
+    "threshold": 0.5,
+    "accuracy": 0.7367,
+    "auc_roc": 0.7493,
+    "precision": 0.7718,
+    "recall": 0.8857,
+    "f1": 0.8248,
+    "approval_rate": 0.8033,
+    "confusion_matrix": {
+      "true_negative": 35,
+      "false_positive": 55,
+      "false_negative": 24,
+      "true_positive": 186
+    },
+    "group_rates": {
+      "female": {
+        "n": 96,
+        "actual_good_rate": 0.6562,
+        "predicted_approval_rate": 0.8021
+      },
+      "male": {
+        "n": 204,
+        "actual_good_rate": 0.7206,
+        "predicted_approval_rate": 0.8039
+      }
+    },
+    "disparate_impact": 0.9977,
+    "statistical_parity_gap": 0.0018,
+    "diagnostic_thresholds_passed": {
+      "disparate_impact_gte_0_80": true,
+      "statistical_parity_gap_lte_0_10": true
+    },
+    "top_features": [
+      {
+        "feature": "checking_status_A14",
+        "importance": 0.15112
+      },
+      {
+        "feature": "employment_A71",
+        "importance": 0.0346
+      },
+      {
+        "feature": "checking_status_A13",
+        "importance": 0.03252
+      },
+      {
+        "feature": "other_debtors_A103",
+        "importance": 0.03244
+      },
+      {
+        "feature": "property_A122",
+        "importance": 0.02768
+      },
+      {
+        "feature": "other_installment_plans_A143",
+        "importance": 0.02751
+      },
+      {
+        "feature": "credit_history_A34",
+        "importance": 0.02724
+      },
+      {
+        "feature": "checking_status_A11",
+        "importance": 0.02707
+      },
+      {
+        "feature": "duration_months",
+        "importance": 0.02663
+      },
+      {
+        "feature": "purpose_A43",
+        "importance": 0.02658
+      }
+    ]
+  },
+  "pipeline": {
+    "ingestion": {
+      "rows": 1000,
+      "train_rows": 700,
+      "test_rows": 300,
+      "encoded_features": 54,
+      "protected_columns_excluded": [
+        "age",
+        "foreign_worker",
+        "gender",
+        "marital_status",
+        "personal_status_sex"
+      ],
+      "gender_counts": {
+        "male": 690,
+        "female": 310
+      }
+    },
+    "xgboost_baseline": {
+      "threshold": 0.5,
+      "accuracy": 0.7367,
+      "auc_roc": 0.7493,
+      "precision": 0.7718,
+      "recall": 0.8857,
+      "f1": 0.8248,
+      "approval_rate": 0.8033,
+      "confusion_matrix": {
+        "true_negative": 35,
+        "false_positive": 55,
+        "false_negative": 24,
+        "true_positive": 186
+      }
+    },
+    "disparate_impact": {
+      "results": {
+        "gender": {
+          "attribute": "gender",
+          "group_rates": [
+            {
+              "group": "female",
+              "n": 96,
+              "n_approved": 77,
+              "approval_rate": 0.8021
+            },
+            {
+              "group": "male",
+              "n": 204,
+              "n_approved": 164,
+              "approval_rate": 0.8039
+            }
+          ],
+          "dir": 0.9977,
+          "spd": 0.0018,
+          "dir_threshold": 0.8,
+          "spd_threshold": 0.1,
+          "passed": true
+        },
+        "age_group": {
+          "attribute": "age_group",
+          "group_rates": [
+            {
+              "group": "18-25",
+              "n": 59,
+              "n_approved": 46,
+              "approval_rate": 0.7797
+            },
+            {
+              "group": "26-35",
+              "n": 110,
+              "n_approved": 89,
+              "approval_rate": 0.8091
+            },
+            {
+              "group": "36-50",
+              "n": 92,
+              "n_approved": 73,
+              "approval_rate": 0.7935
+            },
+            {
+              "group": "51+",
+              "n": 39,
+              "n_approved": 33,
+              "approval_rate": 0.8462
+            }
+          ],
+          "dir": 0.9214,
+          "spd": 0.0665,
+          "dir_threshold": 0.8,
+          "spd_threshold": 0.1,
+          "passed": true
+        },
+        "foreign_worker": {
+          "attribute": "foreign_worker",
+          "group_rates": [
+            {
+              "group": "A201",
+              "n": 287,
+              "n_approved": 228,
+              "approval_rate": 0.7944
+            },
+            {
+              "group": "A202",
+              "n": 13,
+              "n_approved": 13,
+              "approval_rate": 1.0
+            }
+          ],
+          "dir": 0.7944,
+          "spd": 0.2056,
+          "dir_threshold": 0.8,
+          "spd_threshold": 0.1,
+          "passed": false
+        }
+      },
+      "n_pass": 2,
+      "n_fail": 1,
+      "any_violation": true,
+      "thresholds": {
+        "dir": 0.8,
+        "spd": 0.1
+      }
+    },
+    "equalized_odds": {
+      "results": {
+        "gender": {
+          "attribute": "gender",
+          "status": "PASS",
+          "passed": true,
+          "eod": 0.0272,
+          "eod_threshold": 0.1,
+          "worst_pair": {
+            "groups": [
+              "female",
+              "male"
+            ],
+            "tpr_difference": 0.0272,
+            "fpr_difference": 0.0079,
+            "eod": 0.0272
+          },
+          "group_rates": [
+            {
+              "group": "female",
+              "n": 96,
+              "n_positive": 63,
+              "n_negative": 33,
+              "tpr": 0.9048,
+              "fpr": 0.6061,
+              "approval_rate": 0.8021
+            },
+            {
+              "group": "male",
+              "n": 204,
+              "n_positive": 147,
+              "n_negative": 57,
+              "tpr": 0.8776,
+              "fpr": 0.614,
+              "approval_rate": 0.8039
+            }
+          ]
+        },
+        "age_group": {
+          "attribute": "age_group",
+          "status": "FAIL",
+          "passed": false,
+          "eod": 0.2038,
+          "eod_threshold": 0.1,
+          "worst_pair": {
+            "groups": [
+              "18-25",
+              "36-50"
+            ],
+            "tpr_difference": 0.0344,
+            "fpr_difference": 0.2038,
+            "eod": 0.2038
+          },
+          "group_rates": [
+            {
+              "group": "18-25",
+              "n": 59,
+              "n_positive": 34,
+              "n_negative": 25,
+              "tpr": 0.8529,
+              "fpr": 0.68,
+              "approval_rate": 0.7797
+            },
+            {
+              "group": "26-35",
+              "n": 110,
+              "n_positive": 77,
+              "n_negative": 33,
+              "tpr": 0.8831,
+              "fpr": 0.6364,
+              "approval_rate": 0.8091
+            },
+            {
+              "group": "36-50",
+              "n": 92,
+              "n_positive": 71,
+              "n_negative": 21,
+              "tpr": 0.8873,
+              "fpr": 0.4762,
+              "approval_rate": 0.7935
+            },
+            {
+              "group": "51+",
+              "n": 39,
+              "n_positive": 28,
+              "n_negative": 11,
+              "tpr": 0.9286,
+              "fpr": 0.6364,
+              "approval_rate": 0.8462
+            }
+          ]
+        },
+        "foreign_worker": {
+          "attribute": "foreign_worker",
+          "status": "FAIL",
+          "passed": false,
+          "eod": 0.3933,
+          "eod_threshold": 0.1,
+          "worst_pair": {
+            "groups": [
+              "A201",
+              "A202"
+            ],
+            "tpr_difference": 0.1212,
+            "fpr_difference": 0.3933,
+            "eod": 0.3933
+          },
+          "group_rates": [
+            {
+              "group": "A201",
+              "n": 287,
+              "n_positive": 198,
+              "n_negative": 89,
+              "tpr": 0.8788,
+              "fpr": 0.6067,
+              "approval_rate": 0.7944
+            },
+            {
+              "group": "A202",
+              "n": 13,
+              "n_positive": 12,
+              "n_negative": 1,
+              "tpr": 1.0,
+              "fpr": 1.0,
+              "approval_rate": 1.0
+            }
+          ]
+        }
+      },
+      "n_pass": 1,
+      "n_fail": 2,
+      "n_insufficient": 0,
+      "any_violation": true,
+      "threshold": {
+        "eod": 0.1
+      }
+    },
+    "intersectional_bias": {
+      "results": {
+        "gender × age_group": {
+          "status": "PASS",
+          "passed": true,
+          "dir": 0.9158,
+          "spd": 0.0702,
+          "n_valid_cells": 4,
+          "n_excluded_cells": 4,
+          "attributes": [
+            "gender",
+            "age_group"
+          ],
+          "cell_table": [
+            {
+              "gender": "female",
+              "age_group": "18-25",
+              "n": 38,
+              "n_approved": 29,
+              "approval_rate": 0.7632,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "gender": "female",
+              "age_group": "26-35",
+              "n": 30,
+              "n_approved": 25,
+              "approval_rate": 0.8333,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "gender": "female",
+              "age_group": "36-50",
+              "n": 12,
+              "n_approved": 10,
+              "approval_rate": 0.8333,
+              "sufficient_data": false,
+              "exclusion_reason": "n=12 < min_n=30"
+            },
+            {
+              "gender": "female",
+              "age_group": "51+",
+              "n": 16,
+              "n_approved": 13,
+              "approval_rate": 0.8125,
+              "sufficient_data": false,
+              "exclusion_reason": "n=16 < min_n=30"
+            },
+            {
+              "gender": "male",
+              "age_group": "18-25",
+              "n": 21,
+              "n_approved": 17,
+              "approval_rate": 0.8095,
+              "sufficient_data": false,
+              "exclusion_reason": "n=21 < min_n=30"
+            },
+            {
+              "gender": "male",
+              "age_group": "26-35",
+              "n": 80,
+              "n_approved": 64,
+              "approval_rate": 0.8,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "gender": "male",
+              "age_group": "36-50",
+              "n": 80,
+              "n_approved": 63,
+              "approval_rate": 0.7875,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "gender": "male",
+              "age_group": "51+",
+              "n": 23,
+              "n_approved": 20,
+              "approval_rate": 0.8696,
+              "sufficient_data": false,
+              "exclusion_reason": "n=23 < min_n=30"
+            }
+          ]
+        },
+        "gender × foreign_worker": {
+          "status": "PASS",
+          "passed": true,
+          "dir": 0.9896,
+          "spd": 0.0083,
+          "n_valid_cells": 2,
+          "n_excluded_cells": 2,
+          "attributes": [
+            "gender",
+            "foreign_worker"
+          ],
+          "cell_table": [
+            {
+              "gender": "female",
+              "foreign_worker": "A201",
+              "n": 95,
+              "n_approved": 76,
+              "approval_rate": 0.8,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "gender": "female",
+              "foreign_worker": "A202",
+              "n": 1,
+              "n_approved": 1,
+              "approval_rate": 1.0,
+              "sufficient_data": false,
+              "exclusion_reason": "n=1 < min_n=30"
+            },
+            {
+              "gender": "male",
+              "foreign_worker": "A201",
+              "n": 192,
+              "n_approved": 152,
+              "approval_rate": 0.7917,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "gender": "male",
+              "foreign_worker": "A202",
+              "n": 12,
+              "n_approved": 12,
+              "approval_rate": 1.0,
+              "sufficient_data": false,
+              "exclusion_reason": "n=12 < min_n=30"
+            }
+          ]
+        },
+        "age_group × foreign_worker": {
+          "status": "PASS",
+          "passed": true,
+          "dir": 0.9207,
+          "spd": 0.0671,
+          "n_valid_cells": 4,
+          "n_excluded_cells": 2,
+          "attributes": [
+            "age_group",
+            "foreign_worker"
+          ],
+          "cell_table": [
+            {
+              "age_group": "18-25",
+              "foreign_worker": "A201",
+              "n": 59,
+              "n_approved": 46,
+              "approval_rate": 0.7797,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "age_group": "26-35",
+              "foreign_worker": "A201",
+              "n": 103,
+              "n_approved": 82,
+              "approval_rate": 0.7961,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "age_group": "26-35",
+              "foreign_worker": "A202",
+              "n": 7,
+              "n_approved": 7,
+              "approval_rate": 1.0,
+              "sufficient_data": false,
+              "exclusion_reason": "n=7 < min_n=30"
+            },
+            {
+              "age_group": "36-50",
+              "foreign_worker": "A201",
+              "n": 86,
+              "n_approved": 67,
+              "approval_rate": 0.7791,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "age_group": "36-50",
+              "foreign_worker": "A202",
+              "n": 6,
+              "n_approved": 6,
+              "approval_rate": 1.0,
+              "sufficient_data": false,
+              "exclusion_reason": "n=6 < min_n=30"
+            },
+            {
+              "age_group": "51+",
+              "foreign_worker": "A201",
+              "n": 39,
+              "n_approved": 33,
+              "approval_rate": 0.8462,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            }
+          ]
+        },
+        "gender × age_group × foreign_worker": {
+          "status": "PASS",
+          "passed": true,
+          "dir": 0.9737,
+          "spd": 0.0206,
+          "n_valid_cells": 3,
+          "n_excluded_cells": 8,
+          "attributes": [
+            "gender",
+            "age_group",
+            "foreign_worker"
+          ],
+          "cell_table": [
+            {
+              "gender": "female",
+              "age_group": "18-25",
+              "foreign_worker": "A201",
+              "n": 38,
+              "n_approved": 29,
+              "approval_rate": 0.7632,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "gender": "female",
+              "age_group": "26-35",
+              "foreign_worker": "A201",
+              "n": 29,
+              "n_approved": 24,
+              "approval_rate": 0.8276,
+              "sufficient_data": false,
+              "exclusion_reason": "n=29 < min_n=30"
+            },
+            {
+              "gender": "female",
+              "age_group": "26-35",
+              "foreign_worker": "A202",
+              "n": 1,
+              "n_approved": 1,
+              "approval_rate": 1.0,
+              "sufficient_data": false,
+              "exclusion_reason": "n=1 < min_n=30"
+            },
+            {
+              "gender": "female",
+              "age_group": "36-50",
+              "foreign_worker": "A201",
+              "n": 12,
+              "n_approved": 10,
+              "approval_rate": 0.8333,
+              "sufficient_data": false,
+              "exclusion_reason": "n=12 < min_n=30"
+            },
+            {
+              "gender": "female",
+              "age_group": "51+",
+              "foreign_worker": "A201",
+              "n": 16,
+              "n_approved": 13,
+              "approval_rate": 0.8125,
+              "sufficient_data": false,
+              "exclusion_reason": "n=16 < min_n=30"
+            },
+            {
+              "gender": "male",
+              "age_group": "18-25",
+              "foreign_worker": "A201",
+              "n": 21,
+              "n_approved": 17,
+              "approval_rate": 0.8095,
+              "sufficient_data": false,
+              "exclusion_reason": "n=21 < min_n=30"
+            },
+            {
+              "gender": "male",
+              "age_group": "26-35",
+              "foreign_worker": "A201",
+              "n": 74,
+              "n_approved": 58,
+              "approval_rate": 0.7838,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "gender": "male",
+              "age_group": "26-35",
+              "foreign_worker": "A202",
+              "n": 6,
+              "n_approved": 6,
+              "approval_rate": 1.0,
+              "sufficient_data": false,
+              "exclusion_reason": "n=6 < min_n=30"
+            },
+            {
+              "gender": "male",
+              "age_group": "36-50",
+              "foreign_worker": "A201",
+              "n": 74,
+              "n_approved": 57,
+              "approval_rate": 0.7703,
+              "sufficient_data": true,
+              "exclusion_reason": null
+            },
+            {
+              "gender": "male",
+              "age_group": "36-50",
+              "foreign_worker": "A202",
+              "n": 6,
+              "n_approved": 6,
+              "approval_rate": 1.0,
+              "sufficient_data": false,
+              "exclusion_reason": "n=6 < min_n=30"
+            },
+            {
+              "gender": "male",
+              "age_group": "51+",
+              "foreign_worker": "A201",
+              "n": 23,
+              "n_approved": 20,
+              "approval_rate": 0.8696,
+              "sufficient_data": false,
+              "exclusion_reason": "n=23 < min_n=30"
+            }
+          ]
+        }
+      },
+      "n_pass": 4,
+      "n_fail": 0,
+      "n_insufficient": 0,
+      "any_violation": false,
+      "min_n_policy": 30,
+      "thresholds": {
+        "dir": 0.8,
+        "spd": 0.1
+      }
+    },
+    "mitigation": {
+      "constraint": "demographic_parity",
+      "sensitive_attribute": "foreign_worker",
+      "performance": {
+        "before": {
+          "accuracy": 0.7367,
+          "precision": 0.7718,
+          "recall": 0.8857,
+          "approval_rate": 0.8033
+        },
+        "after": {
+          "accuracy": 0.7233,
+          "precision": 0.7725,
+          "recall": 0.8571,
+          "approval_rate": 0.7767
+        },
+        "accuracy_cost": 0.0134
+      },
+      "fairness": {
+        "before": {
+          "demographic_parity_difference": 0.2056,
+          "demographic_parity_ratio": 0.7944,
+          "equalized_odds_difference": 0.3933
+        },
+        "after": {
+          "demographic_parity_difference": 0.153,
+          "demographic_parity_ratio": 0.8342,
+          "equalized_odds_difference": 0.4157
+        }
+      },
+      "disparate_impact_after": {
+        "attribute": "foreign_worker",
+        "group_rates": [
+          {
+            "group": "A201",
+            "n": 287,
+            "n_approved": 221,
+            "approval_rate": 0.77
+          },
+          {
+            "group": "A202",
+            "n": 13,
+            "n_approved": 12,
+            "approval_rate": 0.9231
+          }
+        ],
+        "dir": 0.8342,
+        "spd": 0.153,
+        "dir_threshold": 0.8,
+        "spd_threshold": 0.1,
+        "passed": false
+      },
+      "mitigation_passed": false,
+      "status": "triggered",
+      "trigger": "largest failed disparate-impact check: foreign_worker"
+    }
+  },
+  "robustness": {
+    "distribution_shift": {
+      "test": "distribution_shift",
+      "shift_spec": {
+        "credit_amount": 1.15
+      },
+      "baseline_accuracy": 0.7367,
+      "shifted_accuracy": 0.73,
+      "degradation": 0.0067,
+      "tolerance": 0.05,
+      "passed": true
+    },
+    "decision_boundary_sensitivity": {
+      "test": "decision_boundary_sensitivity",
+      "n_borderline": 27,
+      "perturbation_pct": 0.05,
+      "flip_rate": 0.2222,
+      "flip_threshold": 0.1,
+      "passed": false
+    },
+    "malformed_input_handling": [
+      {
+        "case": "valid row",
+        "expected_reject": false,
+        "actually_rejected": false,
+        "passed": true
+      },
+      {
+        "case": "negative credit_amount",
+        "expected_reject": true,
+        "actually_rejected": true,
+        "passed": true
+      },
+      {
+        "case": "missing duration_months",
+        "expected_reject": true,
+        "actually_rejected": true,
+        "passed": true
+      },
+      {
+        "case": "credit_amount outside training range",
+        "expected_reject": true,
+        "actually_rejected": true,
+        "passed": true
+      }
+    ],
+    "out_of_distribution": {
+      "test": "out_of_distribution",
+      "n_queried": 300,
+      "n_flagged": 11,
+      "flagged_rate": 0.0367,
+      "z_threshold": 3.0,
+      "note": "informational — flags signal lower confidence, do not block prediction"
+    }
+  }
+}

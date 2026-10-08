@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+.pytest_cache/
+
+# Node / demo
+node_modules/
+demo/node_modules/
+docs/node_modules/
+.npm
+
+# Airflow
+airflow.cfg
+airflow.db
+logs/
+airflow/logs/
+
+# Environment
+.env
+.env.*
+*.env
+
+# Generated previews
+docs/*.pdf
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Data — never commit real applicant data
+data/
+*.csv
+!data/.gitkeep
