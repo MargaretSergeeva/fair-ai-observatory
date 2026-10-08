@@ -8,7 +8,6 @@ This directory is the single entry point for human-readable project documentatio
 |---|---|
 | What is this project? | [Concept overview](concept/overview.md) |
 | What is implemented and what is target architecture? | [Architecture and evidence boundaries](concept/architecture.md) |
-| How should the prototype be demonstrated? | [Demo guide](concept/demo-guide.md) |
 | How is the real UCI run reproduced? | [UCI German Credit reference run](reference-run/uci-german-credit.md) |
 
 ## Compliance-document samples
