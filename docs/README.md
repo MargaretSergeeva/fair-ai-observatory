@@ -16,6 +16,10 @@ The DOCX files are the formal sample deliverables and contain the real UCI refer
 - [Project charter](project-management/project-charter.md)
 - [Demo description](demo.md)
 
+## Architecture concepts
+
+- [MCP server concept](architecture/mcp-server-concept.md): proposed MCP layer exposing the pipeline to AI clients (not implemented)
+
 ## Files outside this directory
 
 | Path | Purpose |
