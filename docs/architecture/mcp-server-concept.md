@@ -103,7 +103,23 @@ Human oversight stays in the loop: mitigation results and documentation drafts a
 3. Prompt: `full_compliance_check`
 4. Test in MCP Inspector, then connect to Claude Desktop
 
-## 7. Open questions
+## 7. Target stack (v2)
+
+The v1 plan wraps the current Python scripts. On the target architecture (Airflow → Great Expectations → dbt → XGBoost/Fairlearn, PostgreSQL storage, n8n/Jira sync) the tool, resource and prompt design stays the same; only the wiring behind it changes.
+
+| Concern | v1 (current scripts) | v2 (target stack) |
+|---|---|---|
+| Tools | Call Python functions directly | Trigger Airflow DAG runs via the Airflow REST API; return a run ID |
+| Run status | Synchronous result | New tool `get_run_status(run_id)`; async start-then-poll pattern |
+| Resources | Read files (`decisions.log`, JSON artifacts) | Query PostgreSQL tables (decision log, runs, metrics) |
+| Data quality | Ingestion checks | Great Expectations validation results exposed as a resource (Art. 10 evidence) |
+| Monitoring | Not implemented | Scheduled Airflow DAG (covers `art9_continuous_monitoring`); MCP only reads results |
+| n8n / Jira | — | Stays outside MCP (process sync, not model-invoked) |
+| Language | Python MCP SDK | Python MCP SDK (unchanged) |
+
+Implication: long-running jobs execute in Airflow, not inside a chat request, so the server must handle async calls and cleanup correctly.
+
+## 8. Open questions
 
 - v1 scope: which tools first? (Suggested start: `run_disparate_impact`, decisions-log resource, `full_compliance_check` prompt.)
 - Should `train_model` and `run_mitigation` require explicit human confirmation before running?
