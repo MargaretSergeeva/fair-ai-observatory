@@ -88,7 +88,22 @@ Human oversight stays in the loop: mitigation results and documentation drafts a
 - **Every MCP call is logged** to the audit trail with `source: mcp_server`.
 - **Test with MCP Inspector** before connecting any client.
 
-## 6. Open questions
+## 6. What gets built
+
+| Component | Built by us? | Notes |
+|---|---|---|
+| Observatory MCP server | **Yes** | One Python file (~100–200 lines for v1), official MCP Python SDK; each tool is a thin wrapper around existing pipeline functions |
+| Pipeline (`observatory/`) | No change | Logic stays as is |
+| Database MCP server | **No** | Use an existing server (Postgres, Supabase, etc.) |
+
+### v1 plan
+
+1. Tool: `run_disparate_impact` (wraps `run_disparate_impact_battery`)
+2. Resource: `observatory://audit/decisions-log`
+3. Prompt: `full_compliance_check`
+4. Test in MCP Inspector, then connect to Claude Desktop
+
+## 7. Open questions
 
 - v1 scope: which tools first? (Suggested start: `run_disparate_impact`, decisions-log resource, `full_compliance_check` prompt.)
 - Should `train_model` and `run_mitigation` require explicit human confirmation before running?
